@@ -68,7 +68,7 @@
    ```bash
    ssh admin@你的群晖IP
    sudo -i  # 切换到 root 用户
-   cd /volume1/docker/ContainerManagerSettingTool  # 进入工具目录
+   cd <工具目录>  # 进入工具目录
    ```
 
 3. **执行安装脚本**
