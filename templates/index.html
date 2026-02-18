@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Container Manager 配置管理工具</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230096D6'%3E%3Cpath d='M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.186m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.184-.186h-2.12a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 00-.75.748 11.376 11.376 0 00.692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 003.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z'/%3E%3C/svg%3E">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --synology-blue: #0096D6;
+            --synology-dark: #1a1a2e;
+            --synology-light: #f8f9fa;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--synology-dark) 0%, #16213e 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            color: #fff !important;
+        }
+        
+        .navbar-brand i {
+            color: var(--synology-blue);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+            padding: 1rem 1.25rem;
+        }
+        
+        .status-badge {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+        
+        .status-running {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-stopped {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-unknown {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .backup-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            background: #fff;
+            transition: background 0.2s;
+        }
+        
+        .backup-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .backup-info {
+            flex: 1;
+        }
+        
+        .backup-filename {
+            font-weight: 600;
+            color: #333;
+            font-family: 'Consolas', monospace;
+        }
+        
+        .backup-meta {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .btn-action {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--synology-blue);
+            border-color: var(--synology-blue);
+        }
+        
+        .btn-primary:hover {
+            background: #007ab8;
+            border-color: #007ab8;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .alert-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            max-width: 400px;
+        }
+        
+        .custom-alert {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section-title i {
+            color: var(--synology-blue);
+        }
+        
+        .config-preview {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 0.75rem 1rem;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--synology-blue);
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+        
+        .stat-card .status-badge {
+            font-size: 0.85rem;
+            padding: 0.35rem 0.75rem;
+        }
+        
+        .confirm-modal .modal-content {
+            border-radius: 12px;
+        }
+        
+        .confirm-modal .modal-header {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .confirm-modal .modal-footer {
+            border-top: none;
+            padding-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-dark sticky-top">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0">
+                <i class="bi bi-hdd-stack me-2"></i>
+                Container Manager 配置管理工具
+            </span>
+            <span class="text-light small">
+                <i class="bi bi-server me-1"></i>
+                DSM {{ dsm_version }} | Docker {{ docker_version }}
+            </span>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <div class="container-fluid py-4">
+        <!-- 提示容器 -->
+        <div class="alert-container" id="alertContainer"></div>
+
+        <!-- 状态概览 -->
+        <div class="row mb-4">
+            <!-- Container Manager 状态 -->
+            <div class="col-md-3 mb-3">
+                <div class="card h-100">
+                    <div class="card-body stat-card">
+                        <div class="stat-value">
+                            <span class="status-badge {% if cm_status.running %}status-running{% else %}status-stopped{% endif %}">
+                                <i class="bi {% if cm_status.running %}bi-check-circle-fill{% else %}bi-x-circle-fill{% endif %} me-1"></i>
+                                {{ cm_status.status_text }}
+                            </span>
+                        </div>
+                        <div class="stat-label">Container Manager</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 配置文件状态 -->
+            <div class="col-md-3 mb-3">
+                <div class="card h-100">
+                    <div class="card-body stat-card">
+                        <div class="stat-value">
+                            <i class="bi {% if config_info.exists %}bi-file-earmark-check text-success{% else %}bi-file-earmark-x text-danger{% endif %}"></i>
+                        </div>
+                        <div class="stat-label">
+                            {% if config_info.exists %}配置文件正常{% else %}配置文件异常{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 备份文件数量 -->
+            <div class="col-md-3 mb-3">
+                <div class="card h-100">
+                    <div class="card-body stat-card">
+                        <div class="stat-value">{{ backups|length }}</div>
+                        <div class="stat-label">备份文件数量</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 端口状态 -->
+            <div class="col-md-3 mb-3">
+                <div class="card h-100">
+                    <div class="card-body stat-card">
+                        <div class="stat-value">
+                            <span class="{% if port_status.listening %}text-success{% else %}text-warning{% endif %}">{{ port_status.port }}</span>
+                        </div>
+                        <div class="stat-label">
+                            {% if port_status.listening %}端口监听中{% else %}端口未监听{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- 左侧：配置信息 -->
+            <div class="col-lg-6 mb-4">
+                <!-- 配置文件信息 -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        配置文件信息
+                    </div>
+                    <div class="card-body">
+                        {% if config_info.exists %}
+                        <div class="info-item">
+                            <span class="info-label">文件路径</span>
+                            <span class="info-value text-break">{{ config_info.path }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">最后修改</span>
+                            <span class="info-value">{{ config_info.last_modified }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">文件大小</span>
+                            <span class="info-value">{{ config_info.size }} 字节</span>
+                        </div>
+                        {% if config_info.content %}
+                        <div class="mt-3">
+                            <div class="section-title">
+                                <i class="bi bi-code-square"></i>
+                                当前配置预览
+                            </div>
+                            <div class="config-preview">{{ config_info.content | tojson(indent=2) }}</div>
+                        </div>
+                        {% endif %}
+                        {% else %}
+                        <div class="empty-state">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <p>{{ config_info.error or '配置文件不存在' }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- 快捷操作 -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-lightning me-2"></i>
+                        快捷操作
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="/edit" class="btn btn-primary btn-action">
+                                <i class="bi bi-pencil-square me-2"></i>
+                                编辑配置
+                            </a>
+                            <button type="button" class="btn btn-outline-primary btn-action" onclick="createManualBackup()">
+                                <i class="bi bi-cloud-upload me-2"></i>
+                                手动备份
+                            </button>
+                            <button type="button" class="btn btn-warning btn-action" onclick="showRestartConfirm()">
+                                <i class="bi bi-arrow-clockwise me-2"></i>
+                                快速重启
+                            </button>
+                            <button type="button" class="btn btn-outline-warning btn-action" onclick="showRestartFallbackConfirm()">
+                                <i class="bi bi-arrow-repeat me-2"></i>
+                                套件重启
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：备份列表 -->
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>
+                            <i class="bi bi-archive me-2"></i>
+                            备份文件列表
+                        </span>
+                        <span class="badge bg-secondary">{{ backups|length }} 个备份</span>
+                    </div>
+                    <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                        {% if backups %}
+                        {% for backup in backups %}
+                        <div class="backup-item">
+                            <div class="backup-info">
+                                <div class="backup-filename">{{ backup.filename }}</div>
+                                <div class="backup-meta">
+                                    <i class="bi bi-calendar3 me-1"></i>{{ backup.created_time }}
+                                    <span class="ms-2">
+                                        <i class="bi bi-hdd me-1"></i>{{ backup.size }} 字节
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-info" 
+                                        onclick="previewBackup('{{ backup.filename }}')" title="预览内容">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-primary" 
+                                        onclick="showRestoreConfirm('{{ backup.filename }}')" title="回滚此备份">
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger" 
+                                        onclick="showDeleteBackupConfirm('{{ backup.filename }}')" title="删除此备份">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="empty-state">
+                            <i class="bi bi-inbox"></i>
+                            <p>暂无备份文件</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 确认弹窗 -->
+    <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalTitle">确认操作</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmModalBody">确定要执行此操作吗？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="confirmModalBtn">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 重启监控弹窗 -->
+    <div class="modal fade" id="restartModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title">
+                        <i class="bi bi-arrow-clockwise me-2"></i>
+                        Container Manager 重启监控
+                    </h5>
+                    <button type="button" class="btn-close" id="closeRestartModal" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <pre id="restartLogContent" class="bg-dark text-light p-3 m-0 rounded-0" style="max-height: 500px; overflow-y: auto; min-height: 300px; font-size: 0.85rem;"></pre>
+                </div>
+                <div class="modal-footer">
+                    <div class="me-auto">
+                        <span id="restartStatus" class="badge bg-warning text-dark">
+                            <i class="bi bi-hourglass-split me-1"></i>执行中...
+                        </span>
+                    </div>
+                    <button type="button" class="btn btn-danger" id="stopMonitorBtn" onclick="stopRestartMonitor()">
+                        <i class="bi bi-stop-circle me-1"></i>停止监控
+                    </button>
+                    <button type="button" class="btn btn-primary d-none" id="closeAfterDoneBtn" data-bs-dismiss="modal">
+                        <i class="bi bi-check-circle me-1"></i>完成
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 日志查看弹窗 -->
+    <div class="modal fade" id="logModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">操作日志</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <pre id="logContent" class="bg-dark text-light p-3 rounded" style="max-height: 400px; overflow-y: auto;"></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 备份预览弹窗 -->
+    <div class="modal fade" id="previewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-eye me-2"></i>
+                        <span id="previewModalTitle">备份文件预览</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <pre id="previewContent" class="bg-dark text-light p-3 rounded" style="max-height: 500px; overflow-y: auto; font-size: 0.85rem;"></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // 显示提示消息
+        function showAlert(type, message) {
+            const container = document.getElementById('alertContainer');
+            const alertId = 'alert_' + Date.now();
+            
+            const alertHtml = `
+                <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show custom-alert" role="alert">
+                    <i class="bi ${type === 'success' ? 'bi-check-circle-fill' : type === 'danger' ? 'bi-x-circle-fill' : 'bi-info-circle-fill'} me-2"></i>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', alertHtml);
+            
+            // 3秒后自动消失
+            setTimeout(() => {
+                const alert = document.getElementById(alertId);
+                if (alert) {
+                    alert.remove();
+                }
+            }, 3000);
+        }
+
+        // 手动备份
+        function createManualBackup() {
+            fetch('/api/backup', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showAlert('success', data.message);
+                        setTimeout(() => location.reload(), 1500);
+                    } else {
+                        showAlert('danger', data.message);
+                    }
+                })
+                .catch(error => {
+                    showAlert('danger', '请求失败: ' + error);
+                });
+        }
+
+        // 确认弹窗处理
+        let currentAction = null;
+        let currentData = null;
+
+        function showConfirmModal(title, body, onConfirm) {
+            document.getElementById('confirmModalTitle').textContent = title;
+            document.getElementById('confirmModalBody').textContent = body;
+            currentAction = onConfirm;
+            
+            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            modal.show();
+        }
+
+        document.getElementById('confirmModalBtn').addEventListener('click', function() {
+            if (currentAction) {
+                currentAction();
+            }
+            bootstrap.Modal.getInstance(document.getElementById('confirmModal')).hide();
+        });
+
+        // 回滚确认
+        function showRestoreConfirm(filename) {
+            showConfirmModal(
+                '确认回滚',
+                `确定要将配置回滚到备份「${filename}」吗？当前配置将自动备份。`,
+                function() {
+                    restoreBackup(filename);
+                }
+            );
+        }
+
+        // 执行回滚
+        function restoreBackup(filename) {
+            const formData = new FormData();
+            formData.append('backup_filename', filename);
+            
+            fetch('/api/restore', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('success', '回滚成功！配置已恢复。');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showAlert('danger', data.message);
+                }
+            })
+            .catch(error => {
+                showAlert('danger', '请求失败: ' + error);
+            });
+        }
+
+        // 删除备份确认
+        function showDeleteBackupConfirm(filename) {
+            showConfirmModal(
+                '确认删除',
+                `确定要删除备份「${filename}」吗？此操作不可恢复。`,
+                function() {
+                    deleteBackup(filename);
+                }
+            );
+        }
+
+        // 删除备份
+        function deleteBackup(filename) {
+            const formData = new FormData();
+            formData.append('backup_filename', filename);
+            
+            fetch('/api/delete_backup', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('success', '备份已删除');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showAlert('danger', data.message);
+                }
+            })
+            .catch(error => {
+                showAlert('danger', '请求失败: ' + error);
+            });
+        }
+
+        // 快速重启确认
+        function showRestartConfirm() {
+            showConfirmModal(
+                '确认快速重启',
+                '确定要快速重启 Container Manager 吗？\n使用 systemctl restart（启动较快），重启期间容器服务将暂时中断。',
+                function() {
+                    restartContainerManager();
+                }
+            );
+        }
+
+        // 套件重启确认（备用）
+        function showRestartFallbackConfirm() {
+            showConfirmModal(
+                '确认套件重启',
+                '确定要使用套件方式重启 Container Manager 吗？\n使用 synopkg restart（适用于套件异常时），重启期间容器服务将暂时中断。',
+                function() {
+                    restartContainerManagerFallback();
+                }
+            );
+        }
+
+        // SSE事件源
+        let eventSource = null;
+        
+        // 快速重启 Container Manager（使用SSE实时日志）
+        function restartContainerManager() {
+            // 先启动重启进程
+            fetch('/api/restart', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 显示重启监控弹窗
+                        showRestartMonitor();
+                    } else {
+                        showAlert('danger', data.message);
+                    }
+                })
+                .catch(error => {
+                    showAlert('danger', '请求失败: ' + error);
+                });
+        }
+
+        // 套件重启 Container Manager（备用，使用SSE实时日志）
+        function restartContainerManagerFallback() {
+            // 先启动重启进程
+            fetch('/api/restart_fallback', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 显示重启监控弹窗
+                        showRestartMonitor();
+                    } else {
+                        showAlert('danger', data.message);
+                    }
+                })
+                .catch(error => {
+                    showAlert('danger', '请求失败: ' + error);
+                });
+        }
+        
+        // 显示重启监控弹窗并开始SSE连接
+        function showRestartMonitor() {
+            // 清空日志
+            document.getElementById('restartLogContent').textContent = '';
+            document.getElementById('restartStatus').className = 'badge bg-warning text-dark';
+            document.getElementById('restartStatus').innerHTML = '<i class="bi bi-hourglass-split me-1"></i>执行中...';
+            document.getElementById('stopMonitorBtn').classList.remove('d-none');
+            document.getElementById('closeAfterDoneBtn').classList.add('d-none');
+            
+            // 显示弹窗
+            const modal = new bootstrap.Modal(document.getElementById('restartModal'));
+            modal.show();
+            
+            // 建立SSE连接
+            startSSEConnection();
+        }
+        
+        // 建立SSE连接
+        function startSSEConnection() {
+            if (eventSource) {
+                eventSource.close();
+            }
+            
+            eventSource = new EventSource('/api/restart_stream');
+            
+            eventSource.onmessage = function(event) {
+                const data = event.data;
+                
+                // 检查是否完成
+                if (data === '[DONE]') {
+                    eventSource.close();
+                    eventSource = null;
+                    onRestartComplete(true);
+                    return;
+                }
+                
+                // 追加日志（确保换行显示）
+                const logContent = document.getElementById('restartLogContent');
+                // 如果日志内容不以换行结尾，添加换行
+                if (logContent.textContent.length > 0 && !logContent.textContent.endsWith('\n')) {
+                    logContent.textContent += '\n';
+                }
+                logContent.textContent += data;
+                logContent.scrollTop = logContent.scrollHeight;
+            };
+            
+            eventSource.onerror = function(error) {
+                console.error('SSE连接错误:', error);
+                if (eventSource) {
+                    eventSource.close();
+                    eventSource = null;
+                }
+                onRestartComplete(false);
+            };
+        }
+        
+        // 重启完成回调
+        function onRestartComplete(success) {
+            const statusBadge = document.getElementById('restartStatus');
+            const stopBtn = document.getElementById('stopMonitorBtn');
+            const doneBtn = document.getElementById('closeAfterDoneBtn');
+            
+            if (success) {
+                statusBadge.className = 'badge bg-success';
+                statusBadge.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i>重启成功';
+            } else {
+                statusBadge.className = 'badge bg-danger';
+                statusBadge.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i>连接中断';
+            }
+            
+            stopBtn.classList.add('d-none');
+            doneBtn.classList.remove('d-none');
+            
+            // 刷新页面状态
+            refreshStatus();
+        }
+        
+        // 停止监控
+        function stopRestartMonitor() {
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+            }
+            
+            // 通知后端停止
+            fetch('/api/stop_restart', { method: 'POST' })
+                .then(() => {
+                    const statusBadge = document.getElementById('restartStatus');
+                    statusBadge.className = 'badge bg-secondary';
+                    statusBadge.innerHTML = '<i class="bi bi-stop-circle-fill me-1"></i>已停止监控';
+                    
+                    document.getElementById('stopMonitorBtn').classList.add('d-none');
+                    document.getElementById('closeAfterDoneBtn').classList.remove('d-none');
+                });
+        }
+        
+        // 刷新状态（轻量级API）
+        function refreshStatus() {
+            fetch('/api/cm_status')
+                .then(response => response.json())
+                .then(data => {
+                    // 更新CM状态卡片
+                    const statusBadge = document.querySelector('.stat-card .status-badge');
+                    if (statusBadge) {
+                        if (data.running) {
+                            statusBadge.className = 'status-badge status-running';
+                            statusBadge.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i>' + data.status_text;
+                        } else {
+                            statusBadge.className = 'status-badge status-stopped';
+                            statusBadge.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i>' + data.status_text;
+                        }
+                    }
+                });
+        }
+        
+        // 定时刷新CM状态（每5秒）
+        let statusInterval = null;
+        
+        function startStatusPolling() {
+            if (statusInterval) return;
+            statusInterval = setInterval(refreshStatus, 5000);
+        }
+        
+        function stopStatusPolling() {
+            if (statusInterval) {
+                clearInterval(statusInterval);
+                statusInterval = null;
+            }
+        }
+        
+        // 页面加载完成后启动状态轮询
+        document.addEventListener('DOMContentLoaded', function() {
+            startStatusPolling();
+        });
+        
+        // 页面卸载时清理
+        window.addEventListener('beforeunload', function() {
+            stopStatusPolling();
+            if (eventSource) {
+                eventSource.close();
+            }
+        });
+
+        // 预览备份文件
+        function previewBackup(filename) {
+            const formData = new FormData();
+            formData.append('backup_filename', filename);
+            
+            fetch('/api/preview_backup', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('previewModalTitle').textContent = '备份文件预览: ' + filename;
+                    document.getElementById('previewContent').textContent = data.content;
+                    const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+                    previewModal.show();
+                } else {
+                    showAlert('danger', data.message);
+                }
+            })
+            .catch(error => {
+                showAlert('danger', '请求失败: ' + error);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑配置 - Container Manager 配置管理工具</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230096D6'%3E%3Cpath d='M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.186m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.184-.186h-2.12a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 00-.75.748 11.376 11.376 0 00.692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 003.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z'/%3E%3C/svg%3E">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --synology-blue: #0096D6;
+            --synology-dark: #1a1a2e;
+            --synology-light: #f8f9fa;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--synology-dark) 0%, #16213e 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            color: #fff !important;
+        }
+        
+        .navbar-brand i {
+            color: var(--synology-blue);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+            padding: 1rem 1.25rem;
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        
+        .form-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--synology-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-section-title i {
+            color: var(--synology-blue);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-text {
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 0.75rem 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--synology-blue);
+            box-shadow: 0 0 0 3px rgba(0, 150, 214, 0.1);
+        }
+        
+        .form-control[readonly] {
+            background-color: #f8f9fa;
+            color: #666;
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .readonly-card {
+            background: #f8f9fa;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .readonly-card .readonly-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .readonly-card .readonly-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .readonly-card .readonly-badge {
+            background: #e9ecef;
+            color: #666;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .readonly-card .readonly-badge:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+        
+        .readonly-card .readonly-badge.editable {
+            background: #28a745;
+            color: #fff;
+        }
+        
+        .readonly-card .readonly-badge.editable:hover {
+            background: #dc3545;
+        }
+        
+        .readonly-card.editable-mode .readonly-value {
+            background: #fff;
+            border: 1px solid var(--synology-blue);
+            box-shadow: 0 0 0 3px rgba(0, 150, 214, 0.1);
+        }
+        
+        .readonly-card .readonly-value {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .readonly-card.editable-mode .readonly-value {
+            max-height: 400px;
+        }
+        
+        .readonly-scroll-container {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+        }
+        
+        .mirror-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .mirror-item input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .mirror-item input:focus {
+            outline: none;
+        }
+        
+        .mirror-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            background: #ccc;
+        }
+        
+        .mirror-status.ok { background: #28a745; }
+        .mirror-status.error { background: #dc3545; }
+        .mirror-status.timeout { background: #ffc107; }
+        .mirror-status.testing { background: #17a2b8; animation: pulse 1s infinite; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .test-btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .proxy-test-btn {
+            margin-left: 0.5rem;
+        }
+        
+        .btn-action {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--synology-blue);
+            border-color: var(--synology-blue);
+        }
+        
+        .btn-primary:hover {
+            background: #007ab8;
+            border-color: #007ab8;
+        }
+        
+        .alert-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            max-width: 400px;
+        }
+        
+        .custom-alert {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .confirm-modal .modal-content {
+            border-radius: 12px;
+        }
+        
+        .confirm-modal .modal-header {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .confirm-modal .modal-footer {
+            border-top: none;
+            padding-top: 0;
+        }
+        
+        .config-preview {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            max-height: 300px;
+            overflow-y: auto;
+            color: #a8dadc;
+        }
+        
+        .config-preview .key {
+            color: #f4a261;
+        }
+        
+        .config-preview .string {
+            color: #a8dadc;
+        }
+        
+        .config-preview .number {
+            color: #e9c46a;
+        }
+        
+        .config-preview .boolean {
+            color: #2a9d8f;
+        }
+        
+        .help-icon {
+            cursor: help;
+            color: #999;
+            font-size: 0.85rem;
+        }
+        
+        .sticky-footer {
+            position: sticky;
+            bottom: 0;
+            background: #fff;
+            border-top: 1px solid #eee;
+            padding: 1rem;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-dark sticky-top">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0">
+                <i class="bi bi-hdd-stack me-2"></i>
+                Container Manager 配置管理工具
+            </span>
+            <a href="/" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>
+                返回首页
+            </a>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <div class="container-fluid py-4">
+        <!-- 提示容器 -->
+        <div class="alert-container" id="alertContainer"></div>
+
+        <form id="configForm">
+            <div class="row">
+                <!-- 左侧：可编辑项 -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <i class="bi bi-pencil-square me-2"></i>
+                            可编辑配置项
+                        </div>
+                        <div class="card-body">
+                            <!-- 镜像源配置 -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="bi bi-cloud-download"></i>
+                                    镜像源配置
+                                    <button type="button" class="btn btn-outline-primary btn-sm ms-auto" onclick="testAllMirrors()">
+                                        <i class="bi bi-speedometer2 me-1"></i>测试全部
+                                    </button>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        registry-mirrors（镜像加速地址）
+                                        <i class="bi bi-question-circle help-icon ms-1" 
+                                           title="Docker 镜像加速服务器地址，可配置多个镜像源提高拉取速度"></i>
+                                    </label>
+                                    <div id="mirrorsList" class="mb-2"></div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="newMirrorInput" placeholder="输入新镜像源地址，如 https://docker.mirrors.ustc.edu.cn">
+                                        <button type="button" class="btn btn-outline-success" onclick="addMirror()">
+                                            <i class="bi bi-plus-lg"></i>添加
+                                        </button>
+                                    </div>
+                                    <input type="hidden" name="registry-mirrors" id="registry-mirrors-hidden">
+                                    <div class="form-text">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        点击状态图标可单独测试，绿色=可用，红色=不可用，黄色=超时
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 代理配置 -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="bi bi-globe"></i>
+                                    代理配置
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        http-proxy（HTTP 代理地址）
+                                        <i class="bi bi-question-circle help-icon ms-1" 
+                                           title="Docker 拉取镜像时使用的 HTTP 代理服务器"></i>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="http-proxy" id="http-proxy"
+                                               value="{{ editable_config.get('http-proxy', '') }}"
+                                               placeholder="例如：http://192.168.1.1:7890">
+                                        <button type="button" class="btn btn-outline-primary" onclick="testProxy('http')">
+                                            <i class="bi bi-plug"></i> 测试
+                                        </button>
+                                    </div>
+                                    <div class="form-text">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        HTTP 代理服务器地址，留空则不使用代理
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        https-proxy（HTTPS 代理地址）
+                                        <i class="bi bi-question-circle help-icon ms-1" 
+                                           title="Docker 拉取镜像时使用的 HTTPS 代理服务器"></i>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="https-proxy" id="https-proxy"
+                                               value="{{ editable_config.get('https-proxy', '') }}"
+                                               placeholder="例如：http://192.168.1.1:7890">
+                                        <button type="button" class="btn btn-outline-primary" onclick="testProxy('https')">
+                                            <i class="bi bi-plug"></i> 测试
+                                        </button>
+                                    </div>
+                                    <div class="form-text">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        HTTPS 代理服务器地址，留空则不使用代理
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        no-proxy（跳过代理的地址）
+                                        <i class="bi bi-question-circle help-icon ms-1" 
+                                           title="不需要通过代理访问的地址，多个地址用逗号分隔"></i>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="no-proxy" id="no-proxy"
+                                               value="{{ editable_config.get('no-proxy', '') }}"
+                                               placeholder="例如：localhost,127.0.0.1,*.local">
+                                        <button type="button" class="btn btn-outline-info" onclick="addMirrorsToNoProxy()" title="将镜像源域名添加到跳过代理列表">
+                                            <i class="bi bi-plus-circle"></i> 添加镜像域名
+                                        </button>
+                                    </div>
+                                    <div class="form-text">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        无需使用代理的地址列表，点击「添加镜像域名」自动添加镜像源域名
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 右侧：只读项 -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 d-flex flex-column">
+                        <div class="card-header d-flex justify-content-between align-items-center flex-shrink-0">
+                            <span>
+                                <i class="bi bi-eye me-2"></i>
+                                只读配置项
+                            </span>
+                            <span class="badge bg-secondary">保护字段</span>
+                        </div>
+                        <div class="card-body flex-grow-1 overflow-auto">
+                            <div class="alert alert-info mb-3">
+                                <i class="bi bi-shield-lock me-2"></i>
+                                以下配置项为系统关键参数，仅可查看，不可修改。保存时将自动保留原值。
+                            </div>
+                            
+                            {% for key, value in readonly_config.items() %}
+                            <div class="readonly-card" id="readonly-{{ key | replace('-', '_') }}" data-key="{{ key }}">
+                                <div class="readonly-header">
+                                    <span class="readonly-label">{{ key }}</span>
+                                    <span class="readonly-badge" onclick="toggleReadonly('{{ key | replace('-', '_') }}')">
+                                        <i class="bi bi-lock me-1"></i>只读
+                                    </span>
+                                </div>
+                                <div class="readonly-value" id="value-{{ key | replace('-', '_') }}" data-raw="{{ value | tojson | forceescape }}"></div>
+                            </div>
+                            {% endfor %}
+                            
+                            {% if not readonly_config %}
+                            <div class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                暂无只读配置项
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 配置预览 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-code-square me-2"></i>
+                    完整配置预览（保存后的最终结果）
+                </div>
+                <div class="card-body">
+                    <div class="config-preview" id="configPreview">
+                        <pre>{{ full_config | tojson(indent=2) }}</pre>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 底部操作栏 -->
+    <div class="sticky-footer">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        保存前会自动备份当前配置，可随时从备份恢复
+                    </small>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="/" class="btn btn-outline-secondary btn-action me-2">
+                        <i class="bi bi-x-lg me-1"></i>
+                        取消
+                    </a>
+                    <button type="button" class="btn btn-primary btn-action" onclick="showSaveConfirm()">
+                        <i class="bi bi-check-lg me-1"></i>
+                        保存配置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 确认弹窗 -->
+    <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalTitle">确认操作</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmModalBody">确定要执行此操作吗？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="confirmModalBtn">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 日志查看弹窗 -->
+    <div class="modal fade" id="logModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">操作日志</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <pre id="logContent" class="bg-dark text-light p-3 rounded" style="max-height: 400px; overflow-y: auto;"></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // 原始只读配置
+        const readonlyConfig = {{ readonly_config | tojson }};
+        const fullConfig = {{ full_config | tojson }};
+        
+        // 显示提示消息
+        function showAlert(type, message) {
+            const container = document.getElementById('alertContainer');
+            const alertId = 'alert_' + Date.now();
+            
+            const alertHtml = `
+                <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show custom-alert" role="alert">
+                    <i class="bi ${type === 'success' ? 'bi-check-circle-fill' : type === 'danger' ? 'bi-x-circle-fill' : 'bi-info-circle-fill'} me-2"></i>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', alertHtml);
+            
+            // 3秒后自动消失
+            setTimeout(() => {
+                const alert = document.getElementById(alertId);
+                if (alert) {
+                    alert.remove();
+                }
+            }, 3000);
+        }
+
+        // 更新配置预览
+        function updateConfigPreview() {
+            const form = document.getElementById('configForm');
+            const formData = new FormData(form);
+            
+            // 构建新的可编辑配置
+            const editableValues = {};
+            for (let [key, value] of formData.entries()) {
+                editableValues[key] = value;
+            }
+            
+            // 处理镜像源
+            let mirrorsValue = editableValues['registry-mirrors'] || '';
+            let mirrors = [];
+            if (mirrorsValue.trim()) {
+                try {
+                    if (mirrorsValue.trim().startsWith('[')) {
+                        mirrors = JSON.parse(mirrorsValue);
+                    } else {
+                        mirrors = mirrorsValue.split(/[\n,]/).map(m => m.trim()).filter(m => m);
+                    }
+                } catch (e) {
+                    mirrors = [mirrorsValue.trim()];
+                }
+            }
+            
+            // 合并配置（深拷贝避免修改原对象）
+            const mergedConfig = JSON.parse(JSON.stringify(fullConfig));
+            
+            // 更新镜像源
+            if (mirrors.length > 0) {
+                mergedConfig['registry-mirrors'] = mirrors;
+            } else if (mergedConfig['registry-mirrors']) {
+                delete mergedConfig['registry-mirrors'];
+            }
+            
+            // 更新代理配置（放入 proxies 对象中）
+            const proxyFields = ['http-proxy', 'https-proxy', 'no-proxy'];
+            let hasProxyConfig = false;
+            const proxiesConfig = {};
+            
+            proxyFields.forEach(field => {
+                const value = (editableValues[field] || '').trim();
+                if (value) {
+                    proxiesConfig[field] = value;
+                    hasProxyConfig = true;
+                }
+            });
+            
+            // 如果有代理配置，更新或创建 proxies 对象
+            if (hasProxyConfig) {
+                if (mergedConfig['proxies'] && typeof mergedConfig['proxies'] === 'object') {
+                    // 合并到现有 proxies 配置
+                    mergedConfig['proxies'] = { ...mergedConfig['proxies'], ...proxiesConfig };
+                } else {
+                    mergedConfig['proxies'] = proxiesConfig;
+                }
+            }
+            
+            // 处理已编辑的只读字段 - 检查是否有 hiddenInput（无论是否在编辑模式）
+            // hiddenInput 存在说明用户编辑过该字段
+            const allReadonlyCards = document.querySelectorAll('.readonly-card');
+            allReadonlyCards.forEach(function(card) {
+                const realKey = card.dataset.key;
+                const hiddenInput = card.querySelector('input[name="readonly_' + realKey + '"]');
+                if (hiddenInput) {
+                    const value = hiddenInput.value.trim();
+                    try {
+                        // 尝试解析为 JSON 对象
+                        const parsed = JSON.parse(value);
+                        mergedConfig[realKey] = parsed;
+                    } catch (e) {
+                        // 解析失败，使用原始配置值（保持不变）
+                        console.log('只读字段 ' + realKey + ' JSON 解析失败，保持原值');
+                    }
+                }
+            });
+            
+            // 更新预览
+            document.getElementById('configPreview').innerHTML = '<pre>' + JSON.stringify(mergedConfig, null, 2) + '</pre>';
+        }
+
+        // 监听表单变化
+        document.getElementById('configForm').addEventListener('input', updateConfigPreview);
+
+        // 确认弹窗处理
+        let currentAction = null;
+
+        function showConfirmModal(title, body, onConfirm) {
+            document.getElementById('confirmModalTitle').textContent = title;
+            document.getElementById('confirmModalBody').textContent = body;
+            currentAction = onConfirm;
+            
+            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            modal.show();
+        }
+
+        document.getElementById('confirmModalBtn').addEventListener('click', function() {
+            if (currentAction) {
+                currentAction();
+            }
+            bootstrap.Modal.getInstance(document.getElementById('confirmModal')).hide();
+        });
+
+        // 显示保存确认
+        function showSaveConfirm() {
+            showConfirmModal(
+                '确认保存',
+                '确定要保存配置吗？保存前会自动备份当前配置。',
+                function() {
+                    saveConfig(false);
+                }
+            );
+        }
+
+        // 显示保存并重启确认
+        function showSaveAndRestartConfirm() {
+            showConfirmModal(
+                '确认保存并重启',
+                '确定要保存配置并重启 Container Manager 吗？重启期间容器服务将暂时中断。',
+                function() {
+                    saveConfig(true);
+                }
+            );
+        }
+
+        // 保存配置
+        function saveConfig(restart) {
+            const form = document.getElementById('configForm');
+            const formData = new FormData(form);
+            
+            showAlert('info', '正在保存配置，请稍候...');
+            
+            fetch('/api/save', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (restart) {
+                        showAlert('success', '配置保存成功，正在重启 Container Manager...');
+                        restartContainerManager();
+                    } else {
+                        showAlert('success', data.message);
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 1500);
+                    }
+                } else {
+                    showAlert('danger', data.message);
+                }
+            })
+            .catch(error => {
+                showAlert('danger', '请求失败: ' + error);
+            });
+        }
+
+        // 重启 Container Manager
+        function restartContainerManager() {
+            fetch('/api/restart', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.logs) {
+                        document.getElementById('logContent').textContent = data.logs;
+                        const logModal = new bootstrap.Modal(document.getElementById('logModal'));
+                        logModal.show();
+                    }
+                    
+                    if (data.success) {
+                        showAlert('success', data.message);
+                    } else {
+                        showAlert('danger', data.message);
+                    }
+                    
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                })
+                .catch(error => {
+                    showAlert('danger', '请求失败: ' + error);
+                });
+        }
+
+        // 镜像源列表
+        let mirrorsList = [];
+        // 镜像源测试状态缓存 { url: { status: 'ok'|'error'|'timeout'|'testing', message: '' } }
+        let mirrorsStatus = {};
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化镜像源列表
+            const currentMirrors = {{ editable_config.get('registry-mirrors', []) | tojson if editable_config.get('registry-mirrors') else '[]' }};
+            if (Array.isArray(currentMirrors)) {
+                mirrorsList = currentMirrors.filter(m => m.trim());
+            }
+            renderMirrorsList();
+            
+            // 初始化只读配置项显示
+            Object.keys(readonlyConfig).forEach(function(key) {
+                const keyId = key.replace(/-/g, '_');
+                const valueEl = document.getElementById('value-' + keyId);
+                if (valueEl) {
+                    const rawValue = readonlyConfig[key];
+                    // 格式化显示：对象和数组用 JSON 格式化，其他直接显示
+                    if (typeof rawValue === 'object' && rawValue !== null) {
+                        valueEl.textContent = JSON.stringify(rawValue, null, 2);
+                    } else {
+                        valueEl.textContent = String(rawValue);
+                    }
+                }
+            });
+            
+            updateConfigPreview();
+        });
+        
+        // 渲染镜像源列表
+        function renderMirrorsList() {
+            const container = document.getElementById('mirrorsList');
+            container.innerHTML = '';
+            
+            mirrorsList.forEach((mirror, index) => {
+                const item = document.createElement('div');
+                item.className = 'mirror-item';
+                
+                // 从缓存恢复状态
+                const cachedStatus = mirrorsStatus[mirror] || {};
+                const statusClass = cachedStatus.status || '';
+                const statusTitle = cachedStatus.message || '点击测试';
+                
+                item.innerHTML = `
+                    <span class="mirror-status ${statusClass}" id="mirror-status-${index}" title="${statusTitle}" onclick="testMirror(${index})" style="cursor:pointer"></span>
+                    <input type="text" value="${mirror}" onchange="updateMirror(${index}, this.value)" placeholder="镜像源地址">
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeMirror(${index})">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                `;
+                container.appendChild(item);
+            });
+            
+            updateMirrorsHidden();
+        }
+        
+        // 添加镜像源
+        function addMirror() {
+            const input = document.getElementById('newMirrorInput');
+            const url = input.value.trim();
+            
+            if (!url) {
+                showAlert('warning', '请输入镜像源地址');
+                return;
+            }
+            
+            // 简单校验URL格式
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                showAlert('warning', '镜像源地址应以 http:// 或 https:// 开头');
+                return;
+            }
+            
+            if (mirrorsList.includes(url)) {
+                showAlert('warning', '该镜像源已存在');
+                return;
+            }
+            
+            mirrorsList.push(url);
+            input.value = '';
+            renderMirrorsList();
+            updateConfigPreview();
+            
+            // 自动测试新添加的镜像源
+            testMirror(mirrorsList.length - 1);
+        }
+        
+        // 更新镜像源
+        function updateMirror(index, value) {
+            mirrorsList[index] = value.trim();
+            updateMirrorsHidden();
+            updateConfigPreview();
+        }
+        
+        // 删除镜像源
+        function removeMirror(index) {
+            mirrorsList.splice(index, 1);
+            renderMirrorsList();
+            updateConfigPreview();
+        }
+        
+        // 更新隐藏的表单字段
+        function updateMirrorsHidden() {
+            const hidden = document.getElementById('registry-mirrors-hidden');
+            hidden.value = mirrorsList.join('\n');
+        }
+        
+        // 测试单个镜像源
+        function testMirror(index) {
+            const mirror = mirrorsList[index];
+            if (!mirror) return;
+            
+            const statusEl = document.getElementById(`mirror-status-${index}`);
+            statusEl.className = 'mirror-status testing';
+            statusEl.title = '测试中...';
+            
+            // 保存测试中状态到缓存
+            mirrorsStatus[mirror] = { status: 'testing', message: '测试中...' };
+            
+            const formData = new FormData();
+            formData.append('mirror_url', mirror);
+            
+            fetch('/api/test_mirror', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    statusEl.className = 'mirror-status ok';
+                    statusEl.title = '✓ ' + data.message;
+                    // 保存状态到缓存
+                    mirrorsStatus[mirror] = { status: 'ok', message: '✓ ' + data.message };
+                } else {
+                    statusEl.className = 'mirror-status ' + (data.status || 'error');
+                    statusEl.title = '✗ ' + data.message;
+                    // 保存状态到缓存
+                    mirrorsStatus[mirror] = { status: data.status || 'error', message: '✗ ' + data.message };
+                }
+            })
+            .catch(error => {
+                statusEl.className = 'mirror-status error';
+                statusEl.title = '✗ 测试失败';
+                // 保存状态到缓存
+                mirrorsStatus[mirror] = { status: 'error', message: '✗ 测试失败' };
+            });
+        }
+        
+        // 测试所有镜像源
+        function testAllMirrors() {
+            if (mirrorsList.length === 0) {
+                showAlert('info', '请先添加镜像源');
+                return;
+            }
+            
+            showAlert('info', '正在测试所有镜像源...');
+            mirrorsList.forEach((mirror, index) => {
+                setTimeout(() => testMirror(index), index * 200);
+            });
+        }
+        
+        // 测试代理连接
+        function testProxy(proxyType) {
+            const inputId = proxyType === 'http' ? 'http-proxy' : 'https-proxy';
+            const proxyUrl = document.getElementById(inputId).value.trim();
+            
+            if (!proxyUrl) {
+                showAlert('warning', '请先输入代理地址');
+                return;
+            }
+            
+            showAlert('info', `正在测试 ${proxyType.toUpperCase()} 代理连接...`);
+            
+            const formData = new FormData();
+            formData.append('proxy_url', proxyUrl);
+            formData.append('proxy_type', proxyType);
+            
+            fetch('/api/test_proxy', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('success', `${proxyType.toUpperCase()} 代理: ${data.message}`);
+                } else {
+                    showAlert('danger', `${proxyType.toUpperCase()} 代理: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                showAlert('danger', '测试请求失败: ' + error);
+            });
+        }
+        
+        // 将镜像源域名添加到no-proxy
+        function addMirrorsToNoProxy() {
+            if (mirrorsList.length === 0) {
+                showAlert('warning', '请先添加镜像源');
+                return;
+            }
+            
+            const noProxyInput = document.getElementById('no-proxy');
+            const existingValues = noProxyInput.value.split(',').map(v => v.trim()).filter(v => v);
+            const newDomains = [];
+            
+            mirrorsList.forEach(mirror => {
+                try {
+                    // 从URL提取域名
+                    const url = new URL(mirror);
+                    const domain = url.hostname;
+                    
+                    // 检查是否已存在
+                    if (!existingValues.includes(domain)) {
+                        newDomains.push(domain);
+                    }
+                } catch (e) {
+                    console.error('解析URL失败:', mirror, e);
+                }
+            });
+            
+            if (newDomains.length === 0) {
+                showAlert('info', '所有镜像源域名已在跳过代理列表中');
+                return;
+            }
+            
+            // 合并新旧值（用逗号分隔，无多余空格）
+            const allValues = [...existingValues, ...newDomains];
+            noProxyInput.value = allValues.join(',');
+            
+            showAlert('success', `已添加 ${newDomains.length} 个镜像源域名到跳过代理列表`);
+            updateConfigPreview();
+        }
+
+        // 存储只读字段的编辑状态
+        window.readonlyEditState = {};
+        
+        // 解析编辑后的值（智能处理对象/数组和简单值）
+        function parseEditedValue(editedText, originalValue) {
+            editedText = editedText.trim();
+            
+            // 根据原始值类型决定如何解析
+            if (typeof originalValue === 'object' && originalValue !== null) {
+                // 原始值是对象或数组，必须解析为 JSON
+                try {
+                    return { success: true, value: JSON.parse(editedText) };
+                } catch (e) {
+                    return { success: false, error: e.message };
+                }
+            } else if (typeof originalValue === 'string') {
+                // 原始值是字符串
+                // 先尝试作为 JSON 解析（用户可能输入了带引号的字符串）
+                try {
+                    const parsed = JSON.parse(editedText);
+                    // 如果解析结果是字符串，直接使用
+                    if (typeof parsed === 'string') {
+                        return { success: true, value: parsed };
+                    }
+                    // 如果解析结果是其他类型（数字、布尔、对象），也接受
+                    return { success: true, value: parsed };
+                } catch (e) {
+                    // JSON 解析失败，直接作为字符串使用
+                    return { success: true, value: editedText };
+                }
+            } else if (typeof originalValue === 'number') {
+                // 原始值是数字
+                const num = Number(editedText);
+                if (!isNaN(num)) {
+                    return { success: true, value: num };
+                }
+                // 尝试 JSON 解析
+                try {
+                    const parsed = JSON.parse(editedText);
+                    if (typeof parsed === 'number') {
+                        return { success: true, value: parsed };
+                    }
+                } catch (e) {}
+                return { success: false, error: '请输入有效的数字' };
+            } else if (typeof originalValue === 'boolean') {
+                // 原始值是布尔值
+                if (editedText === 'true' || editedText === 'false') {
+                    return { success: true, value: editedText === 'true' };
+                }
+                // 尝试 JSON 解析
+                try {
+                    const parsed = JSON.parse(editedText);
+                    if (typeof parsed === 'boolean') {
+                        return { success: true, value: parsed };
+                    }
+                } catch (e) {}
+                return { success: false, error: '请输入 true 或 false' };
+            } else {
+                // 其他类型，尝试 JSON 解析
+                try {
+                    return { success: true, value: JSON.parse(editedText) };
+                } catch (e) {
+                    // 解析失败，作为字符串处理
+                    return { success: true, value: editedText };
+                }
+            }
+        }
+        
+        // 切换只读字段为可编辑状态
+        function toggleReadonly(keyId) {
+            const card = document.getElementById('readonly-' + keyId);
+            const badge = card.querySelector('.readonly-badge');
+            const valueDiv = document.getElementById('value-' + keyId);
+            const key = card.dataset.key;
+            
+            // 如果已经是可编辑状态，切换回只读
+            if (card.classList.contains('editable-mode')) {
+                // 获取当前编辑的值
+                const editedText = valueDiv.textContent.trim();
+                
+                // 获取隐藏字段
+                const hiddenInput = card.querySelector('input[name="readonly_' + key + '"]');
+                
+                // 解析编辑后的值
+                const originalValue = readonlyConfig[key];
+                const result = parseEditedValue(editedText, originalValue);
+                
+                if (!result.success) {
+                    showAlert('warning', '值格式错误: ' + result.error);
+                    return;  // 解析失败，不退出编辑模式
+                }
+                
+                // 更新隐藏字段
+                if (hiddenInput) {
+                    if (typeof result.value === 'object' && result.value !== null) {
+                        hiddenInput.value = JSON.stringify(result.value);
+                    } else {
+                        hiddenInput.value = JSON.stringify(result.value);
+                    }
+                }
+                
+                // 更新编辑状态
+                window.readonlyEditState[key] = {
+                    original: originalValue,
+                    current: result.value
+                };
+                
+                // 退出编辑模式
+                card.classList.remove('editable-mode');
+                badge.classList.remove('editable');
+                badge.innerHTML = '<i class="bi bi-lock me-1"></i>只读';
+                valueDiv.contentEditable = 'false';
+                valueDiv.style.cursor = 'default';
+                valueDiv.style.backgroundColor = '#fff';
+                
+                // 显示最终值（格式化）
+                if (typeof result.value === 'object' && result.value !== null) {
+                    valueDiv.textContent = JSON.stringify(result.value, null, 2);
+                } else {
+                    valueDiv.textContent = String(result.value);
+                }
+                
+                updateConfigPreview();
+                return;
+            }
+            
+            // 切换为可编辑状态 - 直接解锁原区域
+            card.classList.add('editable-mode');
+            badge.classList.add('editable');
+            badge.innerHTML = '<i class="bi bi-unlock me-1"></i>锁定';
+            
+            // 直接让 valueDiv 可编辑
+            valueDiv.contentEditable = 'true';
+            valueDiv.style.cursor = 'text';
+            valueDiv.style.backgroundColor = '#fffbe6';  // 淡黄色背景提示可编辑
+            valueDiv.style.outline = '2px solid #0096D6';
+            
+            // 确保有隐藏字段
+            let hiddenInput = card.querySelector('input[name="readonly_' + key + '"]');
+            if (!hiddenInput) {
+                hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'readonly_' + key;
+                card.appendChild(hiddenInput);
+            }
+            
+            const rawValue = readonlyConfig[key];
+            hiddenInput.value = typeof rawValue === 'object' ? JSON.stringify(rawValue) : JSON.stringify(rawValue);
+            
+            // 初始化编辑状态
+            window.readonlyEditState[key] = {
+                original: rawValue,
+                current: rawValue
+            };
+            
+            // 监听输入事件，实时更新
+            valueDiv.addEventListener('input', function handler() {
+                const editedText = valueDiv.textContent.trim();
+                const result = parseEditedValue(editedText, rawValue);
+                
+                if (result.success) {
+                    if (typeof result.value === 'object' && result.value !== null) {
+                        hiddenInput.value = JSON.stringify(result.value);
+                    } else {
+                        hiddenInput.value = JSON.stringify(result.value);
+                    }
+                    window.readonlyEditState[key].current = result.value;
+                    updateConfigPreview();
+                    valueDiv.style.outline = '2px solid #28a745';  // 绿色表示有效
+                } else {
+                    valueDiv.style.outline = '2px solid #dc3545';  // 红色表示错误
+                }
+            });
+            
+            // 聚焦并选中内容
+            valueDiv.focus();
+            
+            // 全选内容（兼容不同浏览器）
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.selectNodeContents(valueDiv);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        // 更新配置预览（包含只读字段修改）- 使用深拷贝避免修改原对象
+        function updateConfigPreviewWithReadonly() {
+            updateConfigPreview();  // 直接调用统一的更新函数
+        }
+    </script>
+</body>
+</html>
