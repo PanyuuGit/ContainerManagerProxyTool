@@ -130,7 +130,7 @@
 ## 📁 目录结构
 
 ```
-/volume1/web_packages/ContainerManagerAddonTool/
+/../ContainerManagerAddonTool/
 ├── deploy.sh           # 一键部署/管理脚本
 ├── deploy.log          # 部署日志（自动生成）
 ├── .env                # 配置文件
@@ -156,7 +156,7 @@
 | `FLASK_ENV` | 运行环境 | `production` |
 | `PORT` | 服务监听端口 | `8888` |
 | `DOCKER_CORE_CONFIG` | Docker 配置目录 | `/var/packages/ContainerManager/etc` |
-| `BACKUP_PATH` | 备份目录 | `/volume1/web_packages/ContainerManagerAddonTool/backups` |
+| `BACKUP_PATH` | 备份目录 | `/../ContainerManagerAddonTool/backups` |
 | `DOCKER_STATUS_CMD` | CM 状态命令路径 | `synopkg status ContainerManager` |
 
 ---
@@ -186,7 +186,7 @@ python3 -m pip install flask python-dotenv json5 --user -i https://pypi.tuna.tsi
 netstat -tlnp | grep 8888
 
 # 停止占用端口的服务，或修改 .env 文件中的端口
-vim /volume1/web_packages/ContainerManagerAddonTool/.env
+vim /../ContainerManagerAddonTool/.env
 # 将 PORT=8888 改为其他端口
 
 # 重启服务
@@ -233,7 +233,7 @@ ls -la /var/packages/ContainerManager/scripts/start-stop-status
 # 群晖控制面板 → 安全性 → 防火墙，确保 8888 端口开放
 
 # 检查日志
-cat /volume1/web_packages/ContainerManagerAddonTool/app.log
+cat /../ContainerManagerAddonTool/app.log
 ```
 
 ---
@@ -253,21 +253,21 @@ cat /volume1/web_packages/ContainerManagerAddonTool/app.log
 
 ```bash
 # 1. 创建目录
-mkdir -p /volume1/web_packages/ContainerManagerAddonTool/{templates,backups}
+mkdir -p /../ContainerManagerAddonTool/{templates,backups}
 
 # 2. 复制文件
-cp app.py /volume1/web_packages/ContainerManagerAddonTool/
-cp .env /volume1/web_packages/ContainerManagerAddonTool/
-cp templates/*.html /volume1/web_packages/ContainerManagerAddonTool/templates/
+cp app.py /../ContainerManagerAddonTool/
+cp .env /../ContainerManagerAddonTool/
+cp templates/*.html /../ContainerManagerAddonTool/templates/
 
 # 3. 安装依赖
 python3 -m pip install flask python-dotenv json5 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # 4. 设置权限
-chmod -R 755 /volume1/web_packages/ContainerManagerAddonTool
+chmod -R 755 /../ContainerManagerAddonTool
 
 # 5. 启动服务
-cd /volume1/web_packages/ContainerManagerAddonTool
+cd /../ContainerManagerAddonTool
 nohup python3 app.py > /dev/null 2>&1 &
 ```
 
@@ -278,8 +278,8 @@ nohup python3 app.py > /dev/null 2>&1 &
 - 适用于群晖 DSM 7.2.2
 - 仅支持管理 `/var/packages/ContainerManager/etc/dockerd.json` 配置文件
 - 如遇问题，请查看日志文件：
-  - 运行日志：`/volume1/web_packages/ContainerManagerAddonTool/app.log`
-  - 部署日志：`/volume1/web_packages/ContainerManagerAddonTool/deploy.log`
+  - 运行日志：`/../ContainerManagerAddonTool/app.log`
+  - 部署日志：`/../ContainerManagerAddonTool/deploy.log`
 
 ---
 
